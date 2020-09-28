@@ -1,8 +1,9 @@
 import React,{Component} from 'react';
-import { View, FlatList } from 'react-native';
+import { View, FlatList , Text} from 'react-native';
 import { ListItem , Avatar, Tile} from 'react-native-elements';
 import { DISHES } from '../shared/dishes';
-
+import {Loading} from './loading'; 
+//Redux import and function
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 
@@ -41,14 +42,27 @@ class Menu extends Component {
             );
         };
     
-        return (
-                <FlatList 
-                    data={this.props.dishes.dishes}
-                    renderItem={renderMenuItem}
-                    keyExtractor={item => item.id.toString()}
-                    //navigation={this.props.navigation}
-                    />
-        );
+            if (this.props.dishes.isLoading) {
+                return(
+                    <Loading />
+                );
+            }
+            else if (this.props.dishes.errMess) {
+                return(
+                    <View>            
+                        <Text>{this.props.dishes.errMess}</Text>
+                    </View>            
+                );
+            }
+            else {
+                return (
+                    <FlatList 
+                        data={this.props.dishes.dishes}
+                        renderItem={renderMenuItem}
+                        keyExtractor={item => item.id.toString()}
+                        />
+                );
+            }
     }
 }
 
