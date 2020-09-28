@@ -1,21 +1,30 @@
 import React,{Component} from 'react';
 import {ScrollView,Text, FlatList} from 'react-native';
 import { Card, ListItem, Avatar } from 'react-native-elements';
+import { connect } from 'react-redux';
+import { baseUrl } from '../shared/baseUrl';
 //Leaders import
-import { LEADERS } from '../shared/leaders';
+//import { LEADERS } from '../shared/leaders';
+
+const mapStateToProps = state => {
+    return {
+      leaders: state.leaders
+    }
+  }
 
 class About extends Component{
-    constructor(props){
+/*    constructor(props){
         super(props);
         this.state={
             leaders: LEADERS  
         };
     }
+*/
     render(){
         const renderLeaders = ({item,index}) => {
             return(
                 <ListItem key={index}>
-                    <Avatar source={require('./images/alberto.png')} />
+                    <Avatar source={{uri:baseUrl+item.image}} />
                     <ListItem.Content>
                         <ListItem.Title>{item.name},</ListItem.Title>
                         <ListItem.Subtitle>{item.description}</ListItem.Subtitle>
@@ -39,7 +48,7 @@ The restaurant traces its humble beginnings to The Frying Pan, a successful chai
             <Card
                 title="Corporate Leaders">
                     <FlatList 
-                    data = {this.state.leaders}
+                    data = {this.props.leaders.leaders}
                     renderItem={renderLeaders}
                     keyExtractor={item => item.id.toString()}
                     />
@@ -50,4 +59,4 @@ The restaurant traces its humble beginnings to The Frying Pan, a successful chai
     }
 }
 
-export default About;
+export default connect(mapStateToProps)(About);
