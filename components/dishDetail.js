@@ -64,16 +64,14 @@ const RenderComments= (props) => {
 }
 
 class DishDetail extends Component{
-/*    
+    
     constructor(props){
         super(props);
         this.state={
-            dishes:DISHES,
-            comments:COMMENTS,
             favorites:[]  
         };
     }
-*/
+
     markFavoriteDish = (dishId) =>{
         this.setState({favorites:this.state.favorites.concat(dishId)})
     }

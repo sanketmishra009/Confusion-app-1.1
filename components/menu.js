@@ -35,7 +35,7 @@ class Menu extends Component {
                     title={item.name}
                     caption={item.description}
                     featured
-                    onPress={() => navigate('Dishdetail', { dishId: item.id })}
+                    onPress={() => this.props.navigation.navigate('DishDetail', { dishId: item.id })}
                     imageSrc={{ uri: baseUrl + item.image}}
                     />
             );
@@ -46,7 +46,7 @@ class Menu extends Component {
                     data={this.props.dishes.dishes}
                     renderItem={renderMenuItem}
                     keyExtractor={item => item.id.toString()}
-
+                    //navigation={this.props.navigation}
                     />
         );
     }
