@@ -4,7 +4,7 @@ import Menu from './menu';
 import Home from './home';
 import About from './about';
 import Contact from './contact';
-import {DISHES} from '../shared/dishes';
+import Reservation from './reserve';
 import DishDetail from './dishDetail';
 import {Text,View,Platform, Image, StyleSheet, ScrollView} from 'react-native';
 import { Icon } from 'react-native-elements';
@@ -55,7 +55,26 @@ const MenuNav = ({navigation}) => {
     </Stack.Navigator>
   );
 }
-
+//Reserve table navigator.
+const ReserveStack = createStackNavigator();
+const ReserveNav = ({navigation}) => {
+  return(
+    <ReserveStack.Navigator screenOptions={{
+      headerStyle: {
+        backgroundColor: '#000',
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+    }}>
+      <ReserveStack.Screen name="Reserve" component={Reservation} options={{
+        headerLeft:(props)=><Icon name="menu"  size={30} color="white" onPress={()=> navigation.toggleDrawer()}/>
+      }}
+        />
+    </ReserveStack.Navigator>
+  );
+}
 const HomeStack = createStackNavigator();
 const HomeNav = ({navigation}) => {
   return(
@@ -202,6 +221,16 @@ const DrawNav = () => {
             />
           )
         }}/>
+      <Draw.Screen name="Reserve" component={ReserveNav} options={{
+        drawerIcon: ({ tintColor, focused }) => (
+          <Icon
+            name='cutlery'
+            type='font-awesome'            
+            size={30}
+            color="#fff"
+          />
+        )
+      }}/>
     </Draw.Navigator>
   );
 }
