@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, ScrollView, StyleSheet, Picker, Switch, Button } from 'react-native';
+import { Text, View, ScrollView, StyleSheet, Picker, Switch, Button, Modal } from 'react-native';
 import { Card } from 'react-native-elements';
 import DatePicker from 'react-native-datepicker'
 
@@ -10,16 +10,28 @@ class Reservation extends Component{
         this.state={
             guests: 1,
             smoking: false,
-            date: ''
+            mada: false,
+            date: '',
+            showModal : false
         }
     }
+    toggleModal(){
+        console.log(this.state)
+        this.setState({showModal: !this.state.showModal});
+        console.log(this.state)
+    }
+    resetForm(){
+        this.setState({
+            guests: 1,
+            smoking: false,
+            mada:false,
+            date: ''
+        });
+    }
+
     handleReservation(){
     console.log(JSON.stringify(this.state));
-    this.setState({
-        guests: 1,
-        smoking: false,
-        date: ''
-    });
+    this.toggleModal();
     }
     render(){
         return(
@@ -39,12 +51,21 @@ class Reservation extends Component{
             </Picker>
             </View>
             <View style={styles.formRow}>
-            <Text style={styles.formLabel}>Ganjei maru ?</Text>
+            <Text style={styles.formLabel}>Ganjei maribu ?</Text>
             <Switch
                 style={styles.formItem}
                 value={this.state.smoking}
                 onTintColor='#512DA8'
                 onValueChange={(value) => this.setState({smoking: value})}>
+            </Switch>
+            </View>
+            <View style={styles.formRow}>
+            <Text style={styles.formLabel}>Mada haba ta ?</Text>
+            <Switch
+                style={styles.formItem}
+                value={this.state.mada}
+                onTintColor='red'
+                onValueChange={(value) => this.setState({mada: value})}>
             </Switch>
             </View>
             <View style={styles.formRow}>
@@ -81,6 +102,23 @@ class Reservation extends Component{
                 accessibilityLabel="Learn more about this purple button"
                 />
             </View>
+            <Modal animationType={"fade"}
+            transparent={false}
+            visible={this.state.showModal}
+            onDismiss={()=> {this.toggleModal(); this.resetForm();}}
+            onRequestClose={()=> {this.toggleModal(); this.resetForm();}}
+            >
+                <View style={styles.modal}>
+                    <Text style = {styles.modalTitle}>Your Reservation</Text>
+                        <Text style = {styles.modalText}>Number of Guests: {this.state.guests}</Text>
+                        <Text style = {styles.modalText}>Ganjei ?: {this.state.smoking ? 'Yes' : 'No'}</Text>
+                        <Text style = {styles.modalText}>Mada : {this.state.mada ? "aji gadibu" : "tu sure mada peebuni ?"}</Text>
+                        <Text style = {styles.modalText}>Date and Time: {this.state.date}</Text>
+                        <Button onPress = {()=> {this.toggleModal(); this.resetForm();}}
+                        color="red" title="close"
+                        />
+                </View>
+            </Modal>
         </ScrollView>
         );
     }
@@ -99,7 +137,25 @@ const styles = StyleSheet.create({
     },
     formItem: {
         flex: 1
-    }
+    },
+    modal: {
+        justifyContent: 'center',
+        backgroundColor: 'black',
+        margin: 20
+     },
+     modalTitle: {
+         fontSize: 24,
+         fontWeight: 'bold',
+         backgroundColor: 'black',
+         textAlign: 'center',
+         color: 'white',
+         marginBottom: 20
+     },
+     modalText: {
+         fontSize: 18,
+         margin: 10,
+         color:"white"
+     }
 });
 
 export default Reservation;
