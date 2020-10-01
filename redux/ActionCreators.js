@@ -1,6 +1,7 @@
 import * as ActionTypes from './ActionTypes';
 import { baseUrl } from '../shared/baseUrl';
 
+//actions for comments.
 export const fetchComments = () => (dispatch) => {
     return fetch(baseUrl + 'comments')
     .then(response => {
@@ -30,6 +31,18 @@ export const addComments = (comments) => ({
     type: ActionTypes.ADD_COMMENTS,
     payload: comments
 });
+
+export const postComment = (comment) => (dispatch) =>{
+    dispatch(addComment(comment));
+}
+export const addComment = (comment) =>({
+    type: ActionTypes.ADD_COMMENT,
+    payload : comment
+});
+
+
+
+//Actions for Dishes.
 
 export const fetchDishes = () => (dispatch) => {
 

@@ -6,7 +6,7 @@ import {Card, Icon, Input, Rating} from 'react-native-elements';
 
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
-import { postFavorite } from '../redux/ActionCreators';
+import { postFavorite, postComment } from '../redux/ActionCreators';
 
 const mapStateToProps = state => {
     return {
@@ -16,7 +16,8 @@ const mapStateToProps = state => {
     }
   }
 const mapDispatchToProps = dispatch => ({
-    postFavorite: (dishId) => dispatch(postFavorite(dishId))
+    postFavorite: (dishId) => dispatch(postFavorite(dishId)),
+    postComment: (comment) => dispatch(postComment(comment))
 })
 
 const RenderDish=(props)=>{
@@ -89,7 +90,8 @@ class DishDetail extends Component{
             showModal:false,
             comment:"",
             author:"",
-            rating:""
+            rating:"",
+            dishId:''
         }
     }
 
@@ -107,7 +109,15 @@ class DishDetail extends Component{
     }
     submitForm(){
         //resets the modal form
-        console.log("reset")
+        var newcomment ={
+            dishId: this.state.dishId,
+            rating:this.state.rating,
+            author:this.state.author,
+            comment:this.state.comment
+        }
+        newcomment.id = Object.keys(this.props.comments.comments).length;
+        newcomment.date = new Date().toISOString();
+        this.props.postComment(newcomment);
     }
     resetForm(){
         this.setState({
@@ -118,6 +128,7 @@ class DishDetail extends Component{
     render(){
         //const {params} = this.props.navigation.state;
         const {dishId} = this.props.route.params;
+        //this.setState({dishId:dishId});
         return(
         <ScrollView>
             <RenderDish dish={this.props.dishes.dishes[+dishId]} 
@@ -129,8 +140,8 @@ class DishDetail extends Component{
             animationType="slide"
             transparent={false}
             visible={this.state.showModal}
-            onDismiss={()=>{this.toggleModal(); this.submitForm()}}
-            onRequestClose={()=>{this.toggleModal(); this.submitForm()}}
+            onDismiss={()=>{this.toggleModal(); this.resetForm()}}
+            onRequestClose={()=>{this.toggleModal(); this.resetForm()}}
             >
                  <View style={styles.modal}>
                     <Text style = {styles.modalTitle}>Write Comment</Text>
@@ -143,7 +154,7 @@ class DishDetail extends Component{
                     <Input 
                     placeholder = "comments"
                     leftIcon={{type:'font-awesome', name:"comment"}}
-                    onChangeText={(value)=> this.setState({comment:value})}
+                    onChangeText={(value)=> this.setState({dishId:dishId ,comment:value})}
                     />
                     <Input 
                     placeholder = "author"

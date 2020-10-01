@@ -6,6 +6,7 @@ import About from './about';
 import Contact from './contact';
 import Reservation from './reserve';
 import DishDetail from './dishDetail';
+import Favorites from './favorites';
 import {Text,View,Platform, Image, StyleSheet, ScrollView} from 'react-native';
 import { Icon } from 'react-native-elements';
 //navigation components
@@ -53,6 +54,28 @@ const MenuNav = ({navigation}) => {
         headerLeft:(props)=><Icon name="menu"  size={30} color="white" onPress={()=> navigation.toggleDrawer()}/>
       }}/>
     </Stack.Navigator>
+  );
+}
+//Favorite stack navigator
+const FavStack = createStackNavigator();
+const FavNav = ({navigation}) => {
+  return(
+    <FavStack.Navigator initialRouteName="Favorites" screenOptions={{
+      headerStyle: {
+        backgroundColor: '#000',
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+    }}>
+      <FavStack.Screen name="Favorites" component={Favorites} options={{
+        headerLeft:(props)=><Icon name="menu" size={30} color="white" onPress={()=> navigation.toggleDrawer()}/>
+      }}/>
+      <FavStack.Screen name="DishDetail" component={DishDetail} options={{
+        headerLeft:(props)=><Icon name="menu"  size={30} color="white" onPress={()=> navigation.toggleDrawer()}/>
+      }}/>
+    </FavStack.Navigator>
   );
 }
 //Reserve table navigator.
@@ -205,6 +228,17 @@ const DrawNav = () => {
         drawerIcon: ({ tintColor, focused }) => (
           <Icon
             name='list'
+            type='font-awesome'            
+            size={30}
+            color="#fff"
+          />
+        )
+      }}/>
+      <Draw.Screen name="Favorites" component={FavNav} 
+      options={{
+        drawerIcon: ({ tintColor, focused }) => (
+          <Icon
+            name='heart'
             type='font-awesome'            
             size={30}
             color="#fff"
