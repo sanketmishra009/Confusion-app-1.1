@@ -30,9 +30,15 @@ const RenderDish=(props)=>{
             return false;
     }
 
+    handleViewRef = ref => this.View=ref;
+
     const panResponder = PanResponder.create({
         onStartShouldSetPanResponder: (e, gestureState) => {
             return true;
+        },
+        onPanResponderGrant: () => {
+            this.View.rubberBand(1000)
+                .then(endState=> console.log(endState ? "Finished.":"Canceled."))
         },
         onPanResponderEnd: (e, gestureState) => {
             console.log("pan responder end", gestureState);
@@ -56,7 +62,9 @@ const RenderDish=(props)=>{
     const dish = props.dish;
     if (dish!=null){
         return(
-            <Animatable.View animation="fadeInDown" duration={1000} delay={1000}  {...panResponder.panHandlers}>
+            <Animatable.View animation="fadeInDown" duration={1000} delay={1000}  {...panResponder.panHandlers}
+            ref= {this.handleViewRef}
+            >
                 <Card
                 featuredTitle = {dish.name}
                 image={{uri:baseUrl+dish.image}}>
