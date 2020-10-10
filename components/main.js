@@ -3,11 +3,12 @@ import React , {Component} from 'react';
 import Menu from './menu';
 import Home from './home';
 import About from './about';
+import Login from './login';
 import Contact from './contact';
 import Reservation from './reserve';
 import DishDetail from './dishDetail';
 import Favorites from './favorites';
-import {Text,View,Platform, Image, StyleSheet, ScrollView} from 'react-native';
+import {Text,View,Platform, Image, StyleSheet, ScrollView , StatusBar} from 'react-native';
 import { Icon } from 'react-native-elements';
 //navigation components
 import { NavigationContainer } from '@react-navigation/native';
@@ -78,6 +79,26 @@ const FavNav = ({navigation}) => {
     </FavStack.Navigator>
   );
 }
+//Login Navigator.
+const LoginStack = createStackNavigator();
+const LoginNav = ({navigation}) => {
+  return(
+    <LoginStack.Navigator screenOptions={{
+      headerStyle: {
+        backgroundColor: '#000',
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+    }}>
+      <LoginStack.Screen name="Login" component={Login} options={{
+        headerLeft:(props)=><Icon name="menu"  size={30} color="white" onPress={()=> navigation.toggleDrawer()}/>
+      }}
+        />
+    </LoginStack.Navigator>
+  );
+}
 //Reserve table navigator.
 const ReserveStack = createStackNavigator();
 const ReserveNav = ({navigation}) => {
@@ -105,12 +126,14 @@ const HomeNav = ({navigation}) => {
       headerStyle: {
         backgroundColor: '#000',
       },
-      headerTintColor: '#fff',
+      headerTintColor: '#fcc',
       headerTitleStyle: {
         fontWeight: 'bold',
+        
       },
     }}>
       <HomeStack.Screen name="Home" component={Home} options={{
+        marginTop:40,
         headerLeft:(props)=><Icon name="menu"  size={30} color="white" onPress={()=> navigation.toggleDrawer()}/>
       }}
         />
@@ -203,6 +226,17 @@ const DrawNav = () => {
       inactiveTintColor :'#fff'
     }}
     >
+      <Draw.Screen name ="Login" component={LoginNav} options={{
+          drawerIcon: ({ tintColor, focused }) => (
+            <Icon
+              name='sign-in'
+              type='font-awesome'            
+              size={30}
+              color="#fff"
+            />
+          )
+
+      }}/>
       <Draw.Screen name="Home" component={HomeNav} options={{
           drawerIcon: ({ tintColor, focused }) => (
             <Icon
@@ -295,6 +329,10 @@ class Main extends Component{
             <View style={{flex:1}}>  
             <SafeAreaProvider>
               <NavigationContainer>
+              {/* <StatusBar  
+     backgroundColor = "#fff"  
+     barStyle = "dark-content"   
+   />   */}
                 <DrawNav/>
               </NavigationContainer>
             </SafeAreaProvider>
