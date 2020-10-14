@@ -138,6 +138,23 @@ class RegisterTab extends Component {
 
     }
 
+    getImageFromCameraRoll = async () => {
+        const cameraPermission = await Permissions.askAsync(Permissions.CAMERA);
+        const cameraRollPermission = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
+        if (cameraPermission.status === 'granted' && cameraRollPermission.status === 'granted') {
+            let capturedImage = await ImagePicker.launchImageLibraryAsync({
+                allowsEditing: true,
+                aspect: [4, 3],
+            });
+            if (!capturedImage.cancelled) {
+                console.log(capturedImage);
+                this.processImage(capturedImage.uri);
+            }
+        }
+
+    }
+
     processImage = async(imageUri) => {
         let processedImage = await ImageManipulator.manipulateAsync(imageUri,
             [
@@ -187,6 +204,10 @@ class RegisterTab extends Component {
                     <Button
                         title="Camera"
                         onPress={this.getImageFromCamera}
+                        />
+                    <Button
+                        title="Gallery"
+                        onPress={this.getImageFromCameraRoll}
                         />
                 </View>
                 <Input
@@ -256,34 +277,6 @@ class RegisterTab extends Component {
 
 
 
-
-const styles = StyleSheet.create({
-    container: {
-        justifyContent: 'center',
-        margin: 20,
-    },
-    imageContainer: {
-        flex: 1,
-        flexDirection: 'row',
-        margin: 20
-    },
-    image: {
-      margin: 10,
-      width: 80,
-      height: 60
-    },
-    formInput: {
-        margin: 20
-    },
-    formCheckbox: {
-        margin: 20,
-        backgroundColor: null
-    },
-    formButton: {
-        margin: 60
-    }
-});
-
 const LoginNav = createBottomTabNavigator();
 //     Login: LoginTab,
 //     Register: RegisterTab
@@ -332,6 +325,35 @@ class Login extends Component {
         );
     }
 }
+
+
+const styles = StyleSheet.create({
+    container: {
+        justifyContent: 'center',
+        margin: 20,
+    },
+    imageContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        margin: 20,
+        justifyContent:'space-evenly'
+    },
+    image: {
+      margin: 10,
+      width: 80,
+      height: 60
+    },
+    formInput: {
+        margin: 20
+    },
+    formCheckbox: {
+        margin: 20,
+        backgroundColor: null
+    },
+    formButton: {
+        margin: 60
+    }
+});
 
 
 

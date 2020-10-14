@@ -7,7 +7,7 @@ import * as Animatable from 'react-native-animatable';
 // import { Notifications } from 'expo';
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
-
+import * as Calendar from 'expo-calendar';
 
 class Reservation extends Component{
     constructor(props){
@@ -17,7 +17,8 @@ class Reservation extends Component{
             smoking: false,
             mada: false,
             date: '',
-            showModal : false
+            showModal : false,
+            calendarId:''
         }
     }
     toggleModal(){
@@ -62,6 +63,45 @@ class Reservation extends Component{
         });
     }
 
+    getDefaultCalendarSource = async () => {
+        const calendars = await Calendar.getCalendarsAsync();
+        const defaultCalendars = calendars.filter(each => each.source.name === 'Default');
+        return defaultCalendars[0].source;
+      }
+
+    createCalendar = async (date) => {
+        const calanderPermission = await Permissions.askAsync(Permissions.CALENDAR);
+        // const reminderPermission = await Permissions.askAsync(Permissions.REMINDERS);
+        if(calanderPermission.status == 'granted')
+        {
+            const defaultCalendarSource = Platform.OS === 'ios'
+            ? await this.getDefaultCalendarSource()
+            : { isLocalAccount: true, name: 'Expo Calendar' };
+            console.log(date);
+                const newCalendarID = await Calendar.createCalendarAsync({
+                    title: 'Reservation',
+                    color: 'blue',
+                    entityType: Calendar.EntityTypes.EVENT,
+                    sourceId: defaultCalendarSource.id,
+                    source: defaultCalendarSource,
+                    name: 'internalCalendarName',
+                    ownerAccount: 'personal',
+                    accessLevel: Calendar.CalendarAccessLevel.OWNER,
+                  });
+                  var date = new Date(date);
+                const event = Calendar.createEventAsync(newCalendarID,{
+                    title:"Reserv",
+                    startDate: date,
+                    endDate:date
+                })
+            this.setState({calendarId:newCalendarID});
+            console.log(date);
+        }
+    }
+
+
+
+
     handleReservation({guests,smoking,date}){
     console.log(JSON.stringify(this.state));
     Alert.alert(
@@ -76,6 +116,7 @@ class Reservation extends Component{
                 text: "ok",
                 onPress: () => {
                     this.presentLocalNotification(this.state.date);
+                    this.createCalendar(this.state.date);
                     this.resetForm()}
             }
 
